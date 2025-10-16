@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>X.com Media Saver</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="extension-header">
+    <h1>X.com Media Saver</h1>
+    <div id="extension-version-popup" class="extension-version-display"></div>
+    <div class="tab-navigation">
+      <button class="tab-button active" data-tab="stats" aria-controls="stats-tab" aria-selected="true">Stats</button>
+      <button class="tab-button" data-tab="gallery" aria-controls="gallery-tab" aria-selected="false">Gallery</button>
+      <button class="tab-button" data-tab="authors" aria-controls="authors-tab" aria-selected="false">Authors</button>
+      <button class="tab-button" data-tab="logs" aria-controls="logs-tab" aria-selected="false">Logs</button>
+      <button class="tab-button" data-tab="settings" aria-controls="settings-tab" aria-selected="false">Settings</button>
+    </div>
+  </div>
+
+  <!-- Stats Tab -->
+  <div class="tab-content active" id="stats-tab" role="tabpanel" aria-labelledby="stats-tab-button">
+    <div class="stats-container">
+      <div class="stat-card">
+        <h3>Total Media</h3>
+        <div class="stat-value" id="total-media">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Authors</h3>
+        <div class="stat-value" id="total-authors">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Today</h3>
+        <div class="stat-value" id="today-media">0</div>
+      </div>
+    </div>
+
+    <div class="media-type-stats">
+      <div class="media-type-item">
+        <span class="media-type-icon" aria-hidden="true">🖼️</span>
+        <span class="media-type-count" id="image-count">0</span>
+        <span class="media-type-label">Images</span>
+      </div>
+      <div class="media-type-item">
+        <span class="media-type-icon" aria-hidden="true">🎬</span>
+        <span class="media-type-count" id="video-count">0</span>
+        <span class="media-type-label">Videos</span>
+      </div>
+    </div>
+
+    <h2>Recently Saved</h2>
+    <div class="recent-images" id="recent-media-container" aria-live="polite">
+      <div class="loading-indicator">Loading...</div>
+    </div>
+  </div>
+
+  <!-- Gallery Tab -->
+  <div class="tab-content" id="gallery-tab" role="tabpanel" aria-labelledby="gallery-tab-button">
+    <div class="gallery-header">
+      <h2>Mini Gallery</h2>
+      <button class="full-gallery-button primary-button" id="open-full-gallery">Open Full Gallery</button>
+    </div>
+    <div class="gallery-filters" style="align-items: center;">
+      <label for="gallery-filter-author" class="visually-hidden">Filter by author</label>
+      <select id="gallery-filter-author" aria-label="Filter by author" style="flex-grow: 1;">
+        <option value="all">All Authors</option>
+      </select>
+      <button id="popup-random-author-btn" class="action-button secondary-button icon-button" aria-label="Select Random Author" title="Select Random Author" style="padding: 5px 7px; font-size: 1em; flex-shrink: 0;">🎲</button>
+    </div>
+    <div class="gallery-filters">
+        <label for="gallery-filter-collection" class="visually-hidden">Filter by collection</label>
+        <select id="gallery-filter-collection" aria-label="Filter by collection">
+            <option value="all">All Collections</option>
+            <option value="_find_manage_collections_">🔍 Find / Manage Collections...</option>
+            <!-- Collections loaded by JS. -->
+        </select>
+    </div>
+     <div class="gallery-filters">
+      <label for="gallery-filter-type" class="visually-hidden">Filter by type</label>
+      <select id="gallery-filter-type" aria-label="Filter by type">
+        <option value="all">All Media</option>
+        <option value="image">Images Only</option>
+        <option value="video">Videos Only</option>
+        <option value="gif">GIFs Only</option>
+        <option value="favorites">Favorites Only</option>
+      </select>
+      <label for="gallery-sort" class="visually-hidden">Sort by</label>
+      <select id="gallery-sort" aria-label="Sort by">
+        <option value="newest">Newest First</option>
+        <option value="oldest">Oldest First</option>
+        <option value="author_az">Author (A-Z)</option>
+        <option value="author_za">Author (Z-A)</option>
+        <option value="random">Random</option>
+      </select>
+    </div>
+    <div class="gallery-pagination">
+      <button id="gallery-prev" disabled aria-label="Previous page" class="action-button secondary-button">« Prev</button>
+      <span id="gallery-page-info" aria-live="polite">Page 1</span>
+      <button id="gallery-next" aria-label="Next page" class="action-button secondary-button">Next »</button>
+    </div>
+    <div class="gallery-grid" id="gallery-grid" aria-live="polite" aria-atomic="true">
+      <div class="loading-indicator">Loading gallery...</div>
+    </div>
+  </div>
+
+  <!-- Authors Tab -->
+  <div class="tab-content" id="authors-tab" role="tabpanel" aria-labelledby="authors-tab-button">
+    <h2>Authors</h2>
+    <div class="authors-controls">
+      <div class="author-sort" style="display: flex; gap: 8px; align-items: center;">
+        <label for="author-sort" class="visually-hidden">Sort authors by</label>
+        <select id="author-sort" aria-label="Sort authors by" style="flex-grow: 1;">
+          <option value="most">Most Media First</option>
+          <option value="fewest">Fewest Media First</option>
+          <option value="az">Name (A-Z)</option>
+          <option value="favorites_first">⭐ Favorites First</option>
+          <option value="random_sort">Random Order</option>
+        </select>
+      </div>
+      <div class="search-bar">
+         <label for="author-search" class="visually-hidden">Search authors</label>
+        <input type="text" id="author-search" placeholder="Search authors..." aria-label="Search authors">
+      </div>
+    </div>
+    <div class="authors-list" id="authors-list" aria-live="polite">
+      <div class="loading-indicator">Loading authors...</div>
+    </div>
+  </div>
+
+  <!-- Logs Tab -->
+  <div class="tab-content" id="logs-tab" role="tabpanel" aria-labelledby="logs-tab-button">
+    <div class="logs-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <h2 style="margin-bottom: 0;">Extension Logs</h2>
+        <button id="refresh-logs-btn" class="action-button secondary-button" title="Refresh Logs">
+            <svg viewBox="0 0 24 24" width="1em" height="1em"><path fill="currentColor" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path></svg>
+        </button>
+    </div>
+    <div class="log-filters" style="margin-bottom: 8px;">
+        <div class="filter-row" style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; align-items: center;">
+            <strong style="font-size: 11px; margin-right: 4px;">Level:</strong>
+            <label style="font-size: 11px;"><input type="checkbox" class="log-level-filter" value="CRITICAL" checked> Critical</label>
+            <label style="font-size: 11px;"><input type="checkbox" class="log-level-filter" value="ERROR" checked> Error</label>
+            <label style="font-size: 11px;"><input type="checkbox" class="log-level-filter" value="WARN" checked> Warn</label>
+            <label style="font-size: 11px;"><input type="checkbox" class="log-level-filter" value="INFO" checked> Info</label>
+            <label style="font-size: 11px;"><input type="checkbox" class="log-level-filter" value="DEBUG"> Debug</label>
+        </div>
+        <div class="filter-row" style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; align-items: center;">
+            <strong style="font-size: 11px; margin-right: 4px;">Source:</strong>
+            <label style="font-size: 11px;"><input type="checkbox" class="log-source-filter" value="BACKGROUND" checked> BG</label>
+            <label style="font-size: 11px;"><input type="checkbox" class="log-source-filter" value="CONTENT_SCRIPT" checked> CS</label>
+            <label style="font-size: 11px;"><input type="checkbox" class="log-source-filter" value="POPUP" checked> Popup</label>
+            <label style="font-size: 11px;"><input type="checkbox" class="log-source-filter" value="GALLERY" checked> Gallery</label>
+        </div>
+        <input type="text" id="log-text-filter" placeholder="Search logs..." style="width: 100%; padding: 5px; border-radius: 4px; border: 1px solid #CFD9DE; font-size: 11px; margin-bottom: 8px;">
+    </div>
+    <div class="log-actions" style="display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap;">
+      <button id="copy-logs-btn" class="action-button secondary-button" style="font-size:11px;">Copy Visible Logs</button>
+      <button id="download-logs-btn" class="action-button secondary-button" style="font-size:11px;">Download Visible</button>
+      <button id="clear-all-logs-btn" class="action-button danger-button" style="font-size:11px;">Clear All Logs</button>
+    </div>
+    <div id="logs-display-container" style="max-height: 250px; overflow-y: auto; border: 1px solid #EFF3F4; border-radius: 4px; padding: 6px; background-color: #F7F9FA;">
+      <!-- Logs will be dynamically inserted here -->
+      <div class="loading-indicator">Loading logs...</div>
+    </div>
+  </div>
+
+
+  <!-- Settings Tab -->
+  <div class="tab-content" id="settings-tab" role="tabpanel" aria-labelledby="settings-tab-button">
+    <h2>Settings</h2>
+    <div class="settings-group">
+      <label for="downloadFolder">Base Download Folder:</label>
+      <input type="text" id="downloadFolder" placeholder="X_Media">
+    </div>
+    <div class="settings-group">
+      <label for="buttonOpacity">Save Button Opacity (Content Script):</label>
+      <input type="range" id="buttonOpacity" min="0.1" max="1" step="0.1" value="0.7" aria-labelledby="buttonOpacityLabel">
+      <span id="opacityValue" aria-live="polite">0.7</span>
+    </div>
+    <div class="settings-group checkbox">
+      <input type="checkbox" id="showNotifications" checked>
+      <label for="showNotifications">Show Notifications (Content Script)</label>
+    </div>
+    <div class="settings-group checkbox">
+      <input type="checkbox" id="autoManageStorage" checked>
+      <label for="autoManageStorage">Auto-manage storage (recommended)</label>
+    </div>
+
+    <div class="stats-info">
+      <div class="storage-meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-labelledby="storage-info-label">
+        <div class="storage-used" style="width: 0%"></div>
+      </div>
+      <div class="storage-info" id="storage-info-label"> Storage used: <span id="storage-used">0 KB</span> of <span id="storage-limit">5 MB</span> </div>
+    </div>
+    <div class="settings-actions">
+      <button id="save-settings" class="action-button primary-button">Save Settings</button>
+      <button id="clear-data" class="action-button danger-button">Clear All Data</button>
+    </div>
+  </div>
+  <div class="visually-hidden" id="buttonOpacityLabel">Save button opacity setting</div>
+
+  <template id="author-template">
+    <div class="author-item">
+      <div class="author-header" role="button" tabindex="0" aria-expanded="false">
+        <div class="author-name-wrapper">
+          <span class="author-name">@username</span>
+        </div>
+        <span class="author-count">0 media</span>
+        <button class="toggle-button" aria-hidden="true" tabindex="-1">▼</button>
+      </div>
+      <div class="author-preview hidden">
+        <div class="author-images"></div>
+        <button class="view-all-button">View All Media</button>
+      </div>
+    </div>
+  </template>
+
+  <template id="media-preview-template">
+    <div class="image-preview" role="button" tabindex="0">
+      <div class="image-container">
+        <img src="" alt="Saved media">
+        <div class="image-actions-popup"> <!-- Corrected class name -->
+            <!-- Add to Collection button will be added here by JS -->
+        </div>
+      </div>
+      <div class="image-info"></div>
+    </div>
+  </template>
+
+  <!-- Manage Collections for a specific Media Item (Popup) -->
+  <div class="modal" id="manage-collections-modal-popup" role="dialog" aria-modal="true" aria-labelledby="manage-collections-modal-title-popup">
+    <div class="modal-overlay" tabindex="-1"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="manage-collections-modal-title-popup">Add Item to Collections</h3>
+        <button class="close-modal" id="close-manage-collections-modal-popup" aria-label="Close manage collections modal">×</button>
+      </div>
+      <div class="modal-body manage-collections-modal-body">
+        <div id="manage-collections-media-preview-container-popup"></div>
+        <span class="modal-media-id-display" id="manage-collections-media-id-popup"></span>
+        <div class="manage-collections-search-group-popup">
+          <label for="search-collections-modal-popup" class="visually-hidden">Search collections</label>
+          <input type="text" id="search-collections-modal-popup" placeholder="Filter collections..." aria-label="Search collections in modal">
+        </div>
+        <div class="create-collection-group">
+          <label for="new-collection-name-modal-popup" class="visually-hidden">New Collection Name</label>
+          <input type="text" id="new-collection-name-modal-popup" placeholder="Or, create new..." aria-label="New collection name">
+          <button id="create-and-add-collection-modal-popup" class="action-button primary-button">
+             <svg viewBox="0 0 24 24" width="1em" height="1em"><path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>
+            Create & Add
+          </button>
+        </div>
+        <ul id="existing-collections-list-modal-popup" class="existing-collections-list">
+        </ul>
+        <p id="manage-collections-loading-popup" class="loading-indicator" style="display:none;">Loading...</p>
+        <p id="manage-collections-empty-popup" class="empty-state-text" style="display:none;">No collections. Create one!</p>
+      </div>
+      <div class="modal-footer" style="justify-content: space-between;">
+        <button id="cancel-collection-changes-modal-popup" class="action-button secondary-button">Close</button>
+        <button id="save-collection-changes-modal-popup" class="action-button primary-button">
+            <svg viewBox="0 0 24 24" width="1em" height="1em"><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg>
+            Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Collections Hub Modal (Popup) -->
+  <div class="modal" id="popup-collections-hub-modal" role="dialog" aria-modal="true" aria-labelledby="collections-hub-modal-title">
+    <div class="modal-overlay" tabindex="-1"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="collections-hub-modal-title">Collections Hub</h3>
+        <button class="close-modal" id="close-collections-hub-modal" aria-label="Close Collections Hub">×</button>
+      </div>
+      <div class="modal-body collections-hub-modal-body">
+        <div class="collections-hub-search-group">
+          <label for="collections-hub-search" class="visually-hidden">Search collections</label>
+          <input type="text" id="collections-hub-search" placeholder="Search collections...">
+        </div>
+        <div id="hub-inline-create-form-container" style="display: none; margin-bottom: 10px;">
+            <div class="create-collection-group">
+                <input type="text" id="hub-inline-new-collection-name" placeholder="New collection name...">
+                <button id="hub-inline-save-collection-btn" class="action-button primary-button">
+                    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg> Save
+                </button>
+                <button id="hub-inline-cancel-collection-btn" class="action-button secondary-button">
+                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg> Cancel
+                </button>
+            </div>
+        </div>
+        <ul id="collections-hub-list" class="collections-hub-list">
+        </ul>
+        <p id="collections-hub-empty-message" class="empty-state-text" style="display:none;">No collections found.</p>
+      </div>
+      <div class="modal-footer collections-hub-footer">
+        <button id="hub-create-new-collection-btn" class="action-button primary-button">
+          <svg viewBox="0 0 24 24" width="1em" height="1em"><path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>
+          Create New Collection
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>X.com Media Saver - Gallery</title>
+  <link rel="stylesheet" href="gallery.css">
+</head>
+<body>
+  <header class="gallery-header">
+    <div class="header-content">
+      <h1>X.com Media Saver <span id="extension-version-gallery" class="extension-version-display-gallery"></span></h1>
+      <div class="tab-navigation">
+        <button class="tab-button active" data-tab="gallery" aria-controls="gallery-tab" aria-selected="true">Gallery</button>
+        <button class="tab-button" data-tab="logs" aria-controls="logs-tab" aria-selected="false">Logs</button>
+      </div>
+      <!-- Gallery Tab -->
+      <div class="tab-content active" id="gallery-tab" role="tabpanel" aria-labelledby="gallery-tab-button">
+        <div class="filter-controls">
+          <div class="filter-group">
+            <label for="author-filter">Author:</label>
+            <select id="author-filter" aria-label="Filter by author">
+              <option value="all">All Authors</option>
+              <!-- Optgroups and Authors will be loaded here by JS -->
+            </select>
+          </div>
+          <button id="random-author-btn" class="action-button" aria-label="Select Random Author" title="Select Random Author" style="margin-left: -2px; margin-right: 8px; padding: 7px 10px; font-size: 1.2em;">🎲</button>
+
+          <div class="filter-group">
+            <label for="collection-filter">Collection:</label>
+            <select id="collection-filter" aria-label="Filter by collection">
+              <option value="all">All Media</option>
+              <!-- Collections will be loaded here by JS -->
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="type-filter">Type:</label>
+            <select id="type-filter" aria-label="Filter by media type">
+              <option value="all">All Media</option>
+              <option value="image">Images Only</option>
+              <option value="video">Videos Only</option>
+              <option value="gif">GIFs Only</option>
+              <option value="favorites">Favorites Only</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="sort-order">Sort By:</label>
+            <select id="sort-order" aria-label="Sort media by">
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="author_az">Author (A-Z)</option>
+              <option value="author_za">Author (Z-A)</option>
+              <option value="random">Random</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="date-filter">Date:</label>
+            <select id="date-filter" aria-label="Filter by date">
+              <option value="all">All Time</option>
+              <option value="today">Today</option>
+              <option value="yesterday">Yesterday</option>
+              <option value="week">This Week</option>
+              <option value="last_7_days">Last 7 Days</option>
+              <option value="month">This Month</option>
+              <option value="last_30_days">Last 30 Days</option>
+            </select>
+          </div>
+
+          <div class="search-bar filter-group">
+            <label for="image-search" class="visually-hidden">Search by author or tweet ID</label>
+            <input type="text" id="image-search" placeholder="Search author/tweet..." aria-label="Search by author or tweet ID">
+          </div>
+          <div class="filter-group clear-filters-wrapper" style="flex-basis: auto; margin-top: 0;">
+            <button id="clear-filters-btn" class="action-button clear-filters-button" aria-label="Clear all filters" style="margin-right: 8px;">Clear Filters</button>
+            <button id="toggle-import-controls-btn" class="action-button secondary-button" aria-label="Toggle import media controls" aria-expanded="false">
+              <svg viewBox="0 0 24 24" style="width:1em; height:1em; margin-right:4px;"><path fill="currentColor" d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"></path></svg>Import Media
+            </button>
+            <button id="batch-select-toggle-btn" class="action-button secondary-button" aria-label="Toggle select mode for batch actions" style="margin-left: 8px;">
+              <svg viewBox="0 0 24 24" style="width:1em;height:1em;margin-right:4px;"><path fill="currentColor" d="M7 14H5v5h5v-2H7v-3zm0-8h3V4H5v5h2V6zm12 8h-3v4h5v-5h-2v3zM14 4v2h3v3h2V4h-5z"></path></svg>Select Items
+            </button>
+          </div>
+        </div>
+        <div id="batch-actions-container" class="hidden" style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; padding: 8px; background-color: rgba(0,0,0,0.03); border-radius: 6px;">
+          <span id="selection-counter" style="font-size: 13px; font-weight: 500; color: #0F1419;">0 items selected</span>
+          <button id="select-all-visible-btn" class="action-button secondary-button" style="font-size:12px;">Select All Visible</button>
+          <button id="deselect-all-visible-btn" class="action-button secondary-button" style="font-size:12px;">Deselect All Visible</button>
+          <button id="delete-selected-btn" class="action-button danger-button" style="font-size:12px;" disabled>
+            <svg viewBox="0 0 24 24" style="width:1em;height:1em;margin-right:4px;"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z"></path></svg>
+            Delete Selected
+          </button>
+        </div>
+        <div id="gallery-import-controls-container" class="hidden" style="margin-top: 15px; padding: 15px; background-color: #EFF3F4; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+          <h3 style="text-align: center; margin-bottom: 10px; font-size: 16px; color: #0F1419;">Import Media from Folder</h3>
+          <div class="import-controls-gallery" style="display: flex; flex-direction: column; gap: 10px;">
+              <input type="file" id="directoryImportInputGallery" webkitdirectory directory multiple aria-label="Select folder to import media from" style="padding: 8px; border: 1px solid #CFD9DE; border-radius: 4px; background-color: #fff;">
+              <button id="processDirectoryImportGallery" class="action-button primary-button" style="width:100%;">Process Selected Folder</button>
+              <button id="abortImportGallery" class="action-button danger-button hidden" style="width:100%;">Abort Import</button>
+          </div>
+          <div id="folderSelectionFeedbackGallery" style="font-size: 12px; margin-top: 8px; color: #536471; min-height: 1.5em; text-align: center;"></div>
+          <p class="import-description-gallery" style="font-size: 11px; margin-top: 8px; color: #536471; text-align: center;">
+              Select your main media backup folder (e.g., 'X_Media' which contains '@AuthorName' subfolders with 'images' or 'videos' inside).
+          </p>
+          <div id="import-advanced-options-toggle" style="font-size: 12px; color: #1D9BF0; cursor: pointer; text-align: center; margin-top: 8px;">Advanced options ▼</div>
+          <div id="import-advanced-options-container" class="hidden" style="font-size: 12px; margin-top: 8px; padding: 8px; background-color: rgba(0,0,0,0.03); border-radius: 4px;">
+              <input type="checkbox" id="startFreshImportGallery" name="startFreshImportGallery" style="vertical-align: middle;">
+              <label for="startFreshImportGallery" style="vertical-align: middle;">Clear previous import progress and start fresh.</label>
+          </div>
+          <div id="importProgressContainerGallery" style="display: none; margin-top: 12px;">
+            <p id="importProgressTextGallery" style="font-size: 12px; margin-bottom: 5px; color: #0F1419; text-align: center;"></p>
+            <div id="importProgressBarGallery" style="width: 100%; background-color: #CFD9DE; border-radius: 4px; height: 10px; overflow: hidden;">
+              <div id="importProgressBarFillGallery" style="width: 0%; height: 100%; background-color: #1D9BF0; border-radius: 4px; transition: width 0.1s ease-out;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logs Tab -->
+      <div class="tab-content" id="logs-tab" role="tabpanel" aria-labelledby="logs-tab-button">
+        <div class="logs-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <h2 style="margin-bottom: 0;">Extension Logs</h2>
+            <button id="refresh-logs-btn-gallery" class="action-button secondary-button" title="Refresh Logs">
+                <svg viewBox="0 0 24 24" width="1em" height="1em"><path fill="currentColor" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path></svg>
+            </button>
+        </div>
+        <div class="log-filters" style="margin-bottom: 8px;">
+            <div class="filter-row" style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; align-items: center;">
+                <strong style="font-size: 11px; margin-right: 4px;">Level:</strong>
+                <label style="font-size: 11px;"><input type="checkbox" class="log-level-filter-gallery" value="CRITICAL" checked> Critical</label>
+                <label style="font-size: 11px;"><input type="checkbox" class="log-level-filter-gallery" value="ERROR" checked> Error</label>
+                <label style="font-size: 11px;"><input type="checkbox" class="log-level-filter-gallery" value="WARN" checked> Warn</label>
+                <label style="font-size: 11px;"><input type="checkbox" class="log-level-filter-gallery" value="INFO" checked> Info</label>
+                <label style="font-size: 11px;"><input type="checkbox" class="log-level-filter-gallery" value="DEBUG"> Debug</label>
+            </div>
+            <div class="filter-row" style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; align-items: center;">
+                <strong style="font-size: 11px; margin-right: 4px;">Source:</strong>
+                <label style="font-size: 11px;"><input type="checkbox" class="log-source-filter-gallery" value="BACKGROUND" checked> BG</label>
+                <label style="font-size: 11px;"><input type="checkbox" class="log-source-filter-gallery" value="CONTENT_SCRIPT" checked> CS</label>
+                <label style="font-size: 11px;"><input type="checkbox" class="log-source-filter-gallery" value="POPUP" checked> Popup</label>
+                <label style="font-size: 11px;"><input type="checkbox" class="log-source-filter-gallery" value="GALLERY" checked> Gallery</label>
+            </div>
+            <input type="text" id="log-text-filter-gallery" placeholder="Search logs..." style="width: 100%; padding: 5px; border-radius: 4px; border: 1px solid #CFD9DE; font-size: 11px; margin-bottom: 8px;">
+        </div>
+        <div class="log-actions" style="display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap;">
+          <button id="copy-logs-btn-gallery" class="action-button secondary-button" style="font-size:11px;">Copy Visible Logs</button>
+          <button id="download-logs-btn-gallery" class="action-button secondary-button" style="font-size:11px;">Download Visible</button>
+          <button id="clear-all-logs-btn-gallery" class="action-button danger-button" style="font-size:11px;">Clear All Logs</button>
+        </div>
+        <div id="logs-display-container-gallery" style="max-height: 400px; overflow-y: auto; border: 1px solid #EFF3F4; border-radius: 4px; padding: 6px; background-color: #F7F9FA;">
+          <!-- Logs will be dynamically inserted here -->
+          <div class="loading-indicator">Loading logs...</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="gallery-container">
+    <div class="pagination">
+      <button id="prev-page" disabled>« Previous</button>
+      <div id="page-numbers-container">
+        <!-- Page numbers will be dynamically inserted here -->
+      </div>
+      <button id="next-page">Next »</button>
+    </div>
+
+    <div class="image-grid" id="media-grid" aria-live="polite" aria-atomic="true">
+      <!-- Media will be loaded here -->
+      <div class="loading-indicator">Loading gallery...</div>
+    </div>
+    
+    <div class="empty-state hidden" id="empty-state">
+      <div class="empty-icon">📷</div>
+      <h2>No Media Found</h2>
+      <p>Try adjusting your filters or save some images/videos from X.com</p>
+    </div>
+  </main>
+
+  <!-- Media Preview Modal -->
+  <div class="modal" id="media-modal" role="dialog" aria-modal="true" aria-labelledby="modal-author">
+    <div class="modal-overlay" tabindex="-1"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-author">@username</h3>
+        <button class="close-modal" aria-label="Close modal">×</button>
+      </div>
+      <div class="modal-body">
+        <!-- Media content will be loaded here dynamically -->
+      </div>
+      <div class="modal-footer">
+        <span id="modal-date">Date</span>
+        <div class="modal-actions">
+          <button id="open-tweet" class="action-button secondary-button">View on X.com</button>
+          <button id="download-media" class="action-button primary-button">Download</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Manage Collections for a specific Media Item Modal -->
+  <div class="modal" id="manage-collections-modal" role="dialog" aria-modal="true" aria-labelledby="manage-collections-modal-title">
+    <div class="modal-overlay" tabindex="-1"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="manage-collections-modal-title">Manage Item's Collections</h3>
+        <button class="close-modal" id="close-manage-collections-modal" aria-label="Close manage collections modal">×</button>
+      </div>
+      <div class="modal-body manage-collections-modal-body">
+        <div id="manage-collections-media-preview-container">
+          <!-- Small media preview will be shown here -->
+        </div>
+        <span class="modal-media-id-display" id="manage-collections-media-id-gallery"></span>
+         <div class="manage-collections-search-group">
+          <label for="search-collections-modal-gallery" class="visually-hidden">Search collections</label>
+          <input type="text" id="search-collections-modal-gallery" placeholder="Filter collections..." aria-label="Search collections in modal">
+        </div>
+        <div class="create-collection-group">
+          <label for="new-collection-name-gallery" class="visually-hidden">New Collection Name</label>
+          <input type="text" id="new-collection-name-gallery" placeholder="Or, create new collection..." aria-label="New collection name">
+          <button id="create-and-add-collection-gallery" class="action-button primary-button">
+            <svg viewBox="0 0 24 24" width="1em" height="1em"><path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>
+            Create & Add
+          </button>
+        </div>
+        <ul id="existing-collections-list-gallery" class="existing-collections-list">
+          <!-- Existing collections will be listed here -->
+        </ul>
+        <p id="manage-collections-loading" class="loading-indicator" style="display:none;">Loading collections...</p>
+        <p id="manage-collections-empty" class="empty-state-text" style="display:none;">No collections yet. Create one above!</p>
+         <button id="remove-from-all-collections-gallery" class="action-button danger-button" style="margin-top: 10px; width:100%;">
+            <svg viewBox="0 0 24 24" width="1em" height="1em"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z"></path></svg>
+            Remove from All Collections
+        </button>
+      </div>
+      <div class="modal-footer" style="justify-content: space-between;">
+        <button id="cancel-collection-changes-gallery" class="action-button secondary-button">Close</button>
+        <button id="save-collection-changes-gallery" class="action-button primary-button">
+            <svg viewBox="0 0 24 24" width="1em" height="1em"><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg>
+            Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Media card template -->
+  <template id="media-card-template">
+    <div class="media-card">
+      <div class="batch-select-checkbox-container">
+        <input type="checkbox" class="batch-select-checkbox visually-hidden" aria-label="Select this item">
+        <span class="custom-checkbox-gallery"></span>
+      </div>
+      <div class="media-thumbnail">
+        <div class="media-preview">
+          <img src="" alt="Saved media">
+        </div>
+        <div class="media-overlay">
+          <button class="view-media">View</button>
+        </div>
+      </div>
+      <div class="media-info">
+        <!-- author-details (name + star), media-date, collection-indicator will be added by JS -->
+      </div>
+    </div>
+  </template>
+  <div class="visually-hidden">
+    <label for="author-filter">Filter by author</label>
+    <label for="collection-filter">Filter by collection</label>
+    <label for="type-filter">Filter by media type</label>
+    <label for="sort-order">Sort media by</label>
+    <label for="date-filter">Filter by date</label>
+  </div>
+  <script src="gallery.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+
+{
+  "name": "X.com Image saver Ex++++",
+  "description": "This extension for brave browser (no Gemini features) is used to save images to your PC folder, under folders labeled after the author. It has a full and popup gallery. ",
+  "requestFramePermissions": [],
+  "prompt": "",
+  "devChangeLogMaxEntries": 20,
+  "devChangeLog": [
+    {
+      "timestamp": "2024-07-15T10:00:00.000Z",
+      "description": "Added 'Delete' and 'Add to Collection' buttons to media previews in the popup's mini-gallery.",
+      "filesModified": [
+        "popup.js"
+      ]
+    }
+  ]
+}

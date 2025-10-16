@@ -1,0 +1,219 @@
+/* X.com Media Saver Styles - Optimized */
+
+/* Save button styling (common for images and videos) */
+.x-image-save-button {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  min-width: auto !important;
+  max-width: 120px !important;
+  min-height: 28px !important;
+  max-height: 32px !important;
+
+  background-color: rgba(29, 155, 240, 0.85) !important; /* Slightly less transparent */
+  color: white !important;
+  border: none !important;
+  border-radius: 20px !important;
+  padding: 6px 12px !important;
+  opacity: 0.95 !important; /* INCREASED - Base opacity nearly opaque */
+
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+  line-height: 1.3 !important;
+  letter-spacing: 0.3px !important;
+  text-transform: none !important;
+
+  z-index: 10000 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+
+  cursor: pointer !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+
+  will-change: transform, opacity !important;
+  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out, opacity 0.2s ease-in-out !important;
+  box-sizing: border-box !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Video save button specific styling */
+.x-media-save-button {
+  background-color: rgba(220, 30, 41, 0.85) !important; /* Slightly less transparent */
+  max-width: 120px !important;
+  opacity: 0.95 !important; /* INCREASED - Base opacity nearly opaque */
+}
+
+/* Button hover/active effects - Opacity changes removed, handled by base opacity */
+.x-image-save-button:hover:not(.retryable):not([data-recording-state="recording"]) {
+  background-color: rgba(29, 155, 240, 0.95) !important;
+  transform: scale(1.05) !important;
+}
+.x-media-save-button:hover:not(.retryable):not([data-recording-state="recording"]) {
+  background-color: rgba(200, 25, 35, 0.95) !important;
+  transform: scale(1.05) !important;
+}
+.x-image-save-button:active {
+  transform: scale(0.98) !important;
+}
+
+/* Button states - Opacity remains high */
+.x-image-save-button.saving,
+.x-media-save-button.saving,
+.x-media-save-button[data-recording-state="recording"] {
+  /* opacity: 0.95 !important; /* No change from base, or slightly different if needed */
+}
+.x-image-save-button.saving::before,
+.x-media-save-button.saving::before {
+  content: "" !important;
+  display: inline-block !important;
+  width: 12px !important;
+  height: 12px !important;
+  margin-right: 6px !important;
+  border-radius: 50% !important;
+  border: 2px solid rgba(255,255,255,0.8) !important;
+  border-right-color: transparent !important;
+  animation: xms-spin 0.8s linear infinite !important;
+}
+
+@keyframes xms-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.x-media-save-button[data-recording-state="recording"] {
+  background-color: rgba(255, 100, 0, 0.9) !important;
+}
+.x-media-save-button[data-recording-state="recording"]:hover {
+  background-color: rgba(255, 120, 0, 0.95) !important;
+}
+
+.x-image-save-button.saved,
+.x-media-save-button.saved {
+  background-color: rgba(0, 180, 42, 0.9) !important;
+  /* opacity: 0.95 !important; /* No change from base */
+}
+.x-image-save-button.saved::before,
+.x-media-save-button.saved::before {
+  content: "✓" !important;
+  display: inline-block !important;
+  margin-right: 4px !important;
+  font-size: 10px !important;
+  font-weight: bold !important;
+}
+.x-image-save-button.saved:hover,
+.x-media-save-button.saved:hover {
+  background-color: rgba(0, 180, 42, 0.95) !important;
+}
+
+.x-image-save-button.retryable {
+  background-color: rgba(255, 165, 0, 0.9) !important;
+  color: white !important;
+  /* opacity: 0.95 !important; /* No change from base */
+}
+.x-image-save-button.retryable::before { content: "" !important; margin-right: 0 !important; }
+.x-image-save-button.retryable:hover {
+  background-color: rgba(255, 140, 0, 0.95) !important;
+  transform: scale(1.05) !important;
+}
+
+
+/* Notification styling - Optimized */
+.x-image-saver-notification {
+  position: fixed !important;
+  bottom: 20px !important;
+  left: 50% !important;
+  transform: translateX(-50%) translateY(100px) translateZ(0) !important;
+  z-index: 10001 !important;
+
+  background-color: rgba(29, 155, 240, 0.9) !important;
+  color: white !important;
+  padding: 8px 16px !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+  opacity: 0 !important;
+
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+  line-height: 1.5 !important;
+
+  will-change: transform, opacity !important;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease !important;
+}
+
+/* Notification types */
+.x-image-saver-notification.success { background-color: rgba(0, 180, 42, 0.9) !important; }
+.x-image-saver-notification.error { background-color: rgba(224, 36, 94, 0.9) !important; }
+.x-image-saver-notification.info { background-color: rgba(29, 155, 240, 0.9) !important; }
+
+.x-image-saver-notification.show {
+  transform: translateX(-50%) translateY(0) translateZ(0) !important; /* Maintain Z for hardware accel */
+  opacity: 1 !important;
+}
+
+/*
+  The following block that applies `position: relative !important;` to media containers
+  has been REMOVED for diagnostic purposes to test the "black images" issue.
+  Save button positioning will be incorrect as a result.
+
+[data-testid="tweetPhoto"],
+[data-testid="tweetPhotoContainer"],
+div[role="link"][data-testid*="tweetPhotoContainer"],
+[data-testid="videoPlayer"],
+[data-testid="videoComponent"],
+[data-testid="videoContainer"],
+[data-testid="tweetGifContainer"]
+{
+  position: relative !important;
+}
+*/
+
+
+/* Dark mode adaptations */
+@media (prefers-color-scheme: dark) {
+  /* Default button colors for dark mode are already handled by the base rules if opacity is high.
+     If specific color tweaks are needed for dark mode, they can be added.
+     For instance, if the blue or red needs to be slightly different intensity.
+  */
+  .x-image-save-button:not(.retryable):not(.saved):not([data-recording-state="recording"]) {
+    background-color: rgba(29, 155, 240, 0.85) !important;
+  }
+  .x-media-save-button:not(.retryable):not(.saved):not([data-recording-state="recording"]) {
+    background-color: rgba(220, 30, 41, 0.85) !important;
+  }
+   .x-media-save-button[data-recording-state="recording"] {
+     background-color: rgba(255, 100, 0, 0.85) !important;
+  }
+  .x-image-save-button.saved,
+  .x-media-save-button.saved {
+     background-color: rgba(0, 180, 42, 0.85) !important;
+  }
+  .x-image-save-button.retryable {
+    background-color: rgba(255, 165, 0, 0.85) !important;
+  }
+
+  /* Hover states for dark mode */
+  .x-image-save-button:not(.retryable):not(.saved):not([data-recording-state="recording"]):hover {
+    background-color: rgba(29, 155, 240, 0.95) !important;
+  }
+  .x-media-save-button:not(.retryable):not(.saved):not([data-recording-state="recording"]):hover {
+    background-color: rgba(220, 30, 41, 0.95) !important;
+  }
+   .x-media-save-button[data-recording-state="recording"]:hover {
+    background-color: rgba(255, 120, 0, 0.95) !important;
+  }
+  .x-image-save-button.saved:hover,
+  .x-media-save-button.saved:hover {
+    background-color: rgba(0, 180, 42, 0.95) !important;
+  }
+  .x-image-save-button.retryable:hover {
+    background-color: rgba(255, 140, 0, 0.95) !important;
+  }
+}
